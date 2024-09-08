@@ -13,7 +13,7 @@ const downloadPdfButton = document.getElementById('download-pdf');
 const backButton = document.getElementById("backButton");
 const editButton = document.getElementById("editButton");
 const resumeContent = document.getElementById("resumeContent");
-const resumeLink = document.getElementById("resume-link");
+const shareLinkButton = document.getElementById("shareLinkButton");
 // Handle form submission
 form.addEventListener("submit", (event) => {
     var _a;
@@ -27,7 +27,6 @@ form.addEventListener("submit", (event) => {
     const workExperience = document.getElementById("workExperience").value;
     const skills = document.getElementById("skills").value;
     const photoInput = document.getElementById("photo");
-    // Handle photo
     const photoFile = photoInput.files ? photoInput.files[0] : null;
     const photoURL = photoFile ? URL.createObjectURL(photoFile) : '';
     // Populate the resume preview
@@ -41,9 +40,21 @@ form.addEventListener("submit", (event) => {
     // Hide form and show resume page
     (_a = document.querySelector(".container")) === null || _a === void 0 ? void 0 : _a.classList.add("hidden");
     resumePage.classList.remove("hidden");
-    // Generate shareable link (for demonstration purposes; adjust URL as needed)
-    const uniqueUrl = `https://${name}.vercel.app/resume`;
-    resumeLink.innerHTML = `Share your resume: <a href="${uniqueUrl}" target="_blank">${uniqueUrl}</a>`;
+    // Generate shareable link with URL query parameters (excluding image)
+    const queryParams = new URLSearchParams({
+        name: name,
+        email: email,
+        phone: phone,
+        degree: degree,
+        education: education,
+        workExperience: workExperience,
+        skills: skills,
+    });
+    const uniqueUrl = `${window.location.origin}?${queryParams.toString()}`;
+    shareLinkButton.addEventListener("click", () => {
+        window.open(uniqueUrl, "_blank");
+    });
+    window.history.replaceState(null, '', `?${queryParams.toString()}`);
 });
 // Add back button functionality to go back to the form
 backButton.addEventListener("click", () => {
@@ -51,6 +62,8 @@ backButton.addEventListener("click", () => {
     // Show the form again and hide the resume preview
     (_a = document.querySelector(".container")) === null || _a === void 0 ? void 0 : _a.classList.remove("hidden");
     resumePage.classList.add("hidden");
+    // Optionally clear query parameters
+    window.history.replaceState(null, '', '/');
 });
 // Add edit button functionality
 editButton.addEventListener("click", () => {
@@ -72,6 +85,7 @@ function updateFormFromResume() {
     document.getElementById("education").value = education || '';
     document.getElementById("workExperience").value = resumeWorkExperience.textContent || '';
     document.getElementById("skills").value = resumeSkills.textContent || '';
+    document.getElementById("photo").value = resumePhoto.textContent || " ";
 }
 // Handle PDF download
 downloadPdfButton.addEventListener('click', () => {
@@ -80,26 +94,42 @@ downloadPdfButton.addEventListener('click', () => {
         return;
     }
     const resumeOptions = {
-        margin: 1,
+        margin: 0.5,
         filename: 'resume.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
+        image: { type: 'jpeg', quality: 1.0 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
-    try {
-        // Attempt to generate and save the PDF
-        html2pdf()
-            .from(resumeContent)
-            .set(resumeOptions)
-            .save()
-            .then(() => {
-            console.log('PDF successfully generated and saved.');
-        })
-            .catch((error) => {
-            console.error('PDF generation error:', error);
-        });
-    }
-    catch (error) {
-        console.error('Unexpected error during PDF generation:', error);
+    // Generate and download PDF
+    html2pdf()
+        .from(resumeContent)
+        .set(resumeOptions)
+        .save()
+        .catch((error) => {
+        console.error('PDF generation error:', error);
+    });
+});
+// Handle query parameters on page load
+window.addEventListener('DOMContentLoaded', () => {
+    var _a;
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get('name') || '';
+    const email = params.get('email') || '';
+    const phone = params.get('phone') || '';
+    const degree = params.get('degree') || '';
+    const education = params.get('education') || '';
+    const workExperience = params.get('workExperience') || '';
+    const skills = params.get('skills') || '';
+    if (name || email || phone || degree || education || workExperience || skills) {
+        // Populate the resume preview if query params are present
+        resumeName.textContent = name;
+        resumeEmail.textContent = `Email: ${email}`;
+        resumePhone.textContent = `Phone: ${phone}`;
+        resumeEducation.textContent = `${degree} from ${education}`;
+        resumeWorkExperience.textContent = workExperience;
+        resumeSkills.textContent = skills;
+        // Hide form and show resume page
+        (_a = document.querySelector(".container")) === null || _a === void 0 ? void 0 : _a.classList.add("hidden");
+        resumePage.classList.remove("hidden");
     }
 });
