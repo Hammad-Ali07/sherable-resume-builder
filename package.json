@@ -1,0 +1,17 @@
+{
+  "name": "shearable-resume",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "html2pdf.js": "^0.10.2",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.3"
+  }
+}

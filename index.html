@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Resume Builder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 id="heading">Dynamic Resume Builder</h1>
+        <form id="resumeForm">
+            <fieldset>
+                <legend>username</legend>
+                <input type="text" id="username" placeholder="Username" required>
+                <br><br>
+
+                <legend>Personal Information</legend>
+                <br>
+                <label for="photo">Upload Photo:</label>
+                <input type="file" id="photo" name="photo" accept="image/*" required>
+                <br><br><br>
+                
+                <label for="name" >Full Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </fieldset>
+
+            <fieldset>
+                <legend>Education</legend>
+                <label for="degree">Degree:</label>
+                <input type="text" id="degree" name="degree" required>
+
+                <label for="education">School:</label>
+                <input type="text" id="education" name="education" required>
+            </fieldset>
+
+            <fieldset>
+                <legend>Work Experience</legend>
+                <label for="workExperience">Details:</label>
+                <textarea id="workExperience" name="workExperience" required></textarea>
+            </fieldset>
+
+            <fieldset>
+                <legend>Skills</legend>
+                <label for="skills">List your skills:</label>
+                <textarea id="skills" name="skills" required></textarea>
+            </fieldset>
+
+            <button type="submit">Generate Resume</button>
+        </form>
+    </div>
+
+    <div id="resumePage" class="resume-page hidden">
+        <div id="resumeContent" class="resume-content">
+            <img id="resumePhoto" class="resume-photo" src="" alt="Profile Photo">
+            <h1 id="resumeName"></h1>
+            <p id="resumeEmail"></p>
+            <p id="resumePhone"></p>
+            
+            <h2>Education:</h2>
+            <p id="resumeEducation"></p>
+
+            <h2>Work Experience:</h2>
+            <p id="resumeWorkExperience"></p>
+
+            <h2>Skills:</h2>
+            <p id="resumeSkills"></p>
+        </div>
+
+        <button id="editButton">Edit</button>
+        <button id="backButton" onclick="window.location.href='index.html'">Back to Form</button>
+        <p id="resume-link"></p>
+        <button id="download-pdf">Download PDF</button>
+    </div>
+   
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script></body>
+</html>
