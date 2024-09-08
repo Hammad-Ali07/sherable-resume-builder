@@ -42,7 +42,7 @@ form.addEventListener("submit", (event) => {
     (_a = document.querySelector(".container")) === null || _a === void 0 ? void 0 : _a.classList.add("hidden");
     resumePage.classList.remove("hidden");
     // Generate shareable link (for demonstration purposes; adjust URL as needed)
-    const uniqueUrl = `https://yourdomain.vercel.app/resume/${name.replace(/\s+/g, '-').toLowerCase()}`;
+    const uniqueUrl = `https://${name}.vercel.app/resume`;
     resumeLink.innerHTML = `Share your resume: <a href="${uniqueUrl}" target="_blank">${uniqueUrl}</a>`;
 });
 // Add back button functionality to go back to the form

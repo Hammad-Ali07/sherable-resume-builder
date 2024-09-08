@@ -158,6 +158,17 @@ button:hover {
     margin-bottom: 16px;
     background-color: #fafafa;
 }
+.resume-content h2{
+    text-align: left;
+    color: #1987fd;
+    text-decoration: underline ;
+
+}
+.resume-content h1{
+    color: #00aca3;
+    text-align: center;
+}
+
 
 /* Responsive Design for Tablets */
 @media (max-width: 768px) {
