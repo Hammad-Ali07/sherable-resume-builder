@@ -18,7 +18,7 @@ const resumeContent = document.getElementById("resumeContent") as HTMLDivElement
 const shareLinkButton = document.getElementById("shareLinkButton") as HTMLButtonElement;
 
 // Handle form submission
-form.addEventListener("submit", (event: Event) => {
+form.addEventListener("submit", async (event: Event) => {
     event.preventDefault();
 
     // Collect form values
@@ -32,10 +32,16 @@ form.addEventListener("submit", (event: Event) => {
     const photoInput = document.getElementById("photo") as HTMLInputElement;
 
     const photoFile = photoInput.files ? photoInput.files[0] : null;
-    const photoURL = photoFile ? URL.createObjectURL(photoFile) : '';
+    let photoBase64 = '';
+
+    if (photoFile) {
+        photoBase64 = await fileToBase64(photoFile);
+        // Store the photo in localStorage instead of passing it in the URL
+        localStorage.setItem("resumePhoto", photoBase64);
+        resumePhoto.src = photoBase64;
+    }
 
     // Populate the resume preview
-    resumePhoto.src = photoURL;
     resumeName.textContent = name;
     resumeEmail.textContent = `Email: ${email}`;
     resumePhone.textContent = `Phone: ${phone}`;
@@ -47,7 +53,7 @@ form.addEventListener("submit", (event: Event) => {
     document.querySelector(".container")?.classList.add("hidden");
     resumePage.classList.remove("hidden");
 
-    // Generate shareable link with URL query parameters (excluding image)
+    // Generate shareable link without the photo
     const queryParams = new URLSearchParams({
         name: name,
         email: email,
@@ -60,11 +66,23 @@ form.addEventListener("submit", (event: Event) => {
 
     const uniqueUrl = `${window.location.origin}?${queryParams.toString()}`;
     shareLinkButton.addEventListener("click", () => {
-        window.open(uniqueUrl, "_blank");
+        navigator.clipboard.writeText(uniqueUrl);
+        alert('Shareable link copied to clipboard!');
     });
 
     window.history.replaceState(null, '', `?${queryParams.toString()}`);
 });
+
+
+// Convert photo to Base64
+function fileToBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
 
 // Add back button functionality to go back to the form
 backButton.addEventListener("click", () => {
@@ -96,9 +114,7 @@ function updateFormFromResume() {
     (document.getElementById("education") as HTMLInputElement).value = education || '';
     (document.getElementById("workExperience") as HTMLTextAreaElement).value = resumeWorkExperience.textContent || '';
     (document.getElementById("skills") as HTMLTextAreaElement).value = resumeSkills.textContent || '';
-   (document.getElementById("photo") as HTMLInputElement).value = resumePhoto.textContent || " ";
 }
-
 
 // Handle PDF download
 downloadPdfButton.addEventListener('click', () => {
@@ -145,8 +161,22 @@ window.addEventListener('DOMContentLoaded', () => {
         resumeWorkExperience.textContent = workExperience;
         resumeSkills.textContent = skills;
 
+        // Retrieve photo from localStorage (if available)
+        const savedPhoto = localStorage.getItem("resumePhoto");
+        if (savedPhoto) {
+            resumePhoto.src = savedPhoto;
+        }
+
         // Hide form and show resume page
         document.querySelector(".container")?.classList.add("hidden");
         resumePage.classList.remove("hidden");
     }
 });
+
+// CSS for ensuring the image is styled properly
+resumePhoto.style.width = "150px";  // Adjust width as per your requirement
+resumePhoto.style.height = "150px";
+resumePhoto.style.objectFit = "cover";
+resumePhoto.style.borderRadius = "50%";  // Circular image
+resumePhoto.style.display = "block";
+resumePhoto.style.margin = "0 auto";
