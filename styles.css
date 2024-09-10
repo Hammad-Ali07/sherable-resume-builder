@@ -7,15 +7,15 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    background : linear-gradient(135deg, #ff7e5f, #feb47b);
     background-size: 400% 400%;
-    animation: gradientBackground 8s ease infinite;
+    animation: gradientBackground 5s ease infinite;
 }
 
 /* Heading Styling */
 #heading {
     text-align: center;
-    color: #10ebcd;
+    color: #049481;
     font-size: 36px;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
     animation: fadeInText 3s ease-out;
@@ -161,7 +161,6 @@ button:hover {
 .resume-content h2{
     text-align: left;
     color: #1987fd;
-    text-decoration: underline ;
 
 }
 .resume-content h1{
